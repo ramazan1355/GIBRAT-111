@@ -66,7 +66,38 @@
             </div>
         </div>
     </footer>
-    <script type="module" src="avatar.js"></script>
-    <script type="module" src="mentor-chat.js"></script>
+    <script>
+        document.querySelectorAll('.tab-item').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.href = link.getAttribute('href');
+            });
+        });
+        
+        const sendBtn = document.getElementById('send-btn');
+        const msgInput = document.getElementById('message-input');
+        const chatBox = document.getElementById('chat-messages');
+        
+        if (sendBtn && msgInput) {
+            sendBtn.addEventListener('click', () => {
+                const text = msgInput.value.trim();
+                if (text) {
+                    const msgDiv = document.createElement('div');
+                    msgDiv.classList.add('message', 'user');
+                    msgDiv.textContent = text;
+                    chatBox.appendChild(msgDiv);
+                    msgInput.value = '';
+                    
+                    setTimeout(() => {
+                        const replyDiv = document.createElement('div');
+                        replyDiv.classList.add('message', 'mentor');
+                        replyDiv.textContent = 'Спасибо за вопрос! Это отличный вопрос.';
+                        chatBox.appendChild(replyDiv);
+                        chatBox.scrollTop = chatBox.scrollHeight;
+                    }, 500);
+                }
+            });
+        }
+    </script>
 </body>
 </html>

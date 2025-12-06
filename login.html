@@ -15,15 +15,24 @@
             <h2 class="login-title">Login</h2>
             <form id="login-form" class="login-form">
                 <input type="email" id="email" name="email" placeholder="email" required>
-                <input type="password" id="password" name="password" placeholder="pasword" required>
-                <a href="#" class="btn primary">login</a>
-                <p class="register-link">Don't have an account? <a href="рег.html">Register here</a></p>
+                <input type="password" id="password" name="password" placeholder="password" required>
+                <button type="button" class="btn primary" onclick="handleLogin()">login</button>
+                <p class="register-link">Don't have an account? <a href="home.html">Register here</a></p>
             </form>
         </main>
     </div>
-    <script type="module" src="firebase-config.js"></script>
-    <script type="module" src="firebase-auth.js"></script>
-    <script type="module" src="firebase-form-handler.js"></script>
-    <script src="navigation.js"></script>
+    <script>
+        function handleLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (email && password) {
+                // Простая валидация
+                localStorage.setItem('userLoggedIn', 'true');
+                localStorage.setItem('userEmail', email);
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
 </body>
 </html>

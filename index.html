@@ -59,8 +59,14 @@
         </a>
     </nav>
 
-    <script type="module" src="firebase-config.js"></script>
-    <script type="module" src="navigation.js"></script>
-    <script type="module" src="home.js"></script>
+    <script>
+        // Простая навигация
+        document.querySelectorAll('.tab-item').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.href = link.getAttribute('href');
+            });
+        });
+    </script>
 </body>
 </html>
