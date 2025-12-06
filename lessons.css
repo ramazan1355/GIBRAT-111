@@ -871,3 +871,53 @@ body {
 .secondary:hover {
     background-color: #313155;
 }
+
+/* ================================================= */
+/* ТЕСТЫ ПО ФИЗИКЕ */
+/* ================================================= */
+.lesson-card {
+    background: linear-gradient(135deg, rgba(85, 52, 235, 0.2) 0%, rgba(100, 150, 255, 0.1) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.lesson-card:hover {
+    background: linear-gradient(135deg, rgba(85, 52, 235, 0.3) 0%, rgba(100, 150, 255, 0.2) 100%);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-3px);
+}
+
+.lesson-card h3 {
+    font-size: 18px;
+    margin-bottom: 12px;
+    color: #87CEEB;
+    font-weight: 600;
+}
+
+.test-btn {
+    background: linear-gradient(90deg, #5534eb 0%, #6a49ff 100%);
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(85, 52, 235, 0.3);
+    width: 100%;
+}
+
+.test-btn:hover {
+    background: linear-gradient(90deg, #6a49ff 0%, #7e5fff 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(85, 52, 235, 0.5);
+}
+
+.test-btn:active {
+    transform: translateY(0);
+}

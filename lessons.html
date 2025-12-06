@@ -14,7 +14,35 @@
 
         <main class="content">
             <div class="lessons-list" id="lessons-list">
-                <!-- Уроки загружаются здесь -->
+                <h2>Физика - Мини тесты</h2>
+                
+                <div class="lesson-card">
+                    <h3>Тест 1: Механика</h3>
+                    <button class="test-btn" onclick="startTest(1)">Начать тест</button>
+                </div>
+                
+                <div class="lesson-card">
+                    <h3>Тест 2: Термодинамика</h3>
+                    <button class="test-btn" onclick="startTest(2)">Начать тест</button>
+                </div>
+                
+                <div class="lesson-card">
+                    <h3>Тест 3: Электричество</h3>
+                    <button class="test-btn" onclick="startTest(3)">Начать тест</button>
+                </div>
+                
+                <div class="lesson-card">
+                    <h3>Тест 4: Оптика</h3>
+                    <button class="test-btn" onclick="startTest(4)">Начать тест</button>
+                </div>
+                
+                <div id="test-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:999; padding:20px;">
+                    <div style="background:#0B1E32; border-radius:15px; padding:20px; max-width:600px; margin:auto; color:#fff; margin-top:50px;">
+                        <h2 id="test-title"></h2>
+                        <div id="test-content"></div>
+                        <button onclick="closeTest()" style="background:#FF6B6B; color:#fff; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; margin-top:20px;">Закрыть</button>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -52,6 +80,59 @@
         </a>
     </nav>
     <script>
+        // Физика тесты
+        const tests = {
+            1: {
+                title: 'Тест 1: Механика',
+                questions: [
+                    { q: 'Чему равно ускорение свободного падения?', a: '9.8 м/с²' },
+                    { q: 'Что такое инерция?', a: 'Свойство тел сохранять состояние движения' }
+                ]
+            },
+            2: {
+                title: 'Тест 2: Термодинамика',
+                questions: [
+                    { q: 'Какой первый закон термодинамики?', a: 'Закон сохранения энергии' },
+                    { q: 'Что такое энтропия?', a: 'Мера беспорядка в системе' }
+                ]
+            },
+            3: {
+                title: 'Тест 3: Электричество',
+                questions: [
+                    { q: 'Какой закон Ома?', a: 'I = U/R' },
+                    { q: 'Что такое электрический ток?', a: 'Движение заряженных частиц' }
+                ]
+            },
+            4: {
+                title: 'Тест 4: Оптика',
+                questions: [
+                    { q: 'Что такое преломление света?', a: 'Изменение направления света при переходе в другую среду' },
+                    { q: 'Какая скорость света?', a: '3×10⁸ м/с' }
+                ]
+            }
+        };
+
+        function startTest(testNum) {
+            const test = tests[testNum];
+            const modal = document.getElementById('test-modal');
+            const title = document.getElementById('test-title');
+            const content = document.getElementById('test-content');
+            
+            title.textContent = test.title;
+            content.innerHTML = test.questions.map((q, i) => `
+                <div style="margin:15px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:8px;">
+                    <p><strong>${i+1}. ${q.q}</strong></p>
+                    <p style="color:#87CEEB;">Ответ: ${q.a}</p>
+                </div>
+            `).join('');
+            
+            modal.style.display = 'block';
+        }
+
+        function closeTest() {
+            document.getElementById('test-modal').style.display = 'none';
+        }
+
         document.querySelectorAll('.tab-item').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
