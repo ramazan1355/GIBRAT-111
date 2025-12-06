@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIBRAT - Вход</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">GIBRAT</h1>
+        </header>
+        <main class="content login-page">
+            <h2 class="login-title">Login</h2>
+            <form id="login-form" class="login-form">
+                <input type="email" id="email" name="email" placeholder="email" required>
+                <input type="password" id="password" name="password" placeholder="pasword" required>
+                <a href="#" class="btn primary">login</a>
+                <p class="register-link">Don't have an account? <a href="рег.html">Register here</a></p>
+            </form>
+        </main>
+    </div>
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="firebase-auth.js"></script>
+    <script type="module" src="firebase-form-handler.js"></script>
+    <script src="navigation.js"></script>
+</body>
+</html>
