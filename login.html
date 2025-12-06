@@ -3,36 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAT - Вход</title>
+    <title>Вход - GIBRAT</title>
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <h1 class="logo">GIBRAT</h1>
-        </header>
-        <main class="content login-page">
-            <h2 class="login-title">Login</h2>
-            <form id="login-form" class="login-form">
-                <input type="email" id="email" name="email" placeholder="email" required>
-                <input type="password" id="password" name="password" placeholder="password" required>
-                <button type="button" class="btn primary" onclick="handleLogin()">login</button>
-                <p class="register-link">Don't have an account? <a href="register.html">Register here</a></p>
+        <div class="login-box">
+            <h1>Вход в GIBRAT</h1>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Пароль:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn-login">Войти</button>
             </form>
-        </main>
+            <p class="signup-link">Нет аккаунта? <a href="register.html">Зарегистрироваться</a></p>
+        </div>
     </div>
-    <script>
-        function handleLogin() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            if (email && password) {
-                // Простая валидация
-                localStorage.setItem('userLoggedIn', 'true');
-                localStorage.setItem('userEmail', email);
-                window.location.href = 'index.html';
-            }
-        }
-    </script>
+
+    <script src="login.js"></script>
 </body>
 </html>

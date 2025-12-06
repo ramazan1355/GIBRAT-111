@@ -1,137 +1,111 @@
-// Модуль аватара — TTS, STT, управление ртом и запросы к DeepSeek
-
-/* ------------------------------
-    НАСТРОЙКА
--------------------------------- */
-const API_KEY = "sk-e0cec48a37bc4588961174b33ce3d385";
-const API_URL = "https://api.deepseek.com/chat/completions";
-
-// Позиция рта – при необходимости подгоните под своё PNG
-export const MOUTH = {
+// Avatar module with TTS and AI integration
+const MOUTH = {
     left: "50%",
     top: "71%",
     width: "118px",
     height: "30px"
 };
 
+const API_KEY = "sk-e0cec48a37bc4588961174b33ce3d385";
 
-/* ------------------------------
-    МАСТЕР-РОТ
--------------------------------- */
-export function initMouth(mouthEl) {
-    if (!mouthEl) return;
-    mouthEl.style.position = 'absolute';
-    mouthEl.style.left = MOUTH.left;
-    mouthEl.style.top = MOUTH.top;
-    mouthEl.style.width = MOUTH.width;
-    mouthEl.style.height = MOUTH.height;
-    mouthEl.style.transform = 'translate(-50%, -50%) scale(1,1)';
-    mouthEl.style.borderRadius = '20px';
-    mouthEl.style.background = '#8b0000';
+function initMouth(avatarElement) {
+    const mouth = document.createElement('div');
+    mouth.id = 'mouth';
+    mouth.style.position = 'absolute';
+    mouth.style.left = MOUTH.left;
+    mouth.style.top = MOUTH.top;
+    mouth.style.width = MOUTH.width;
+    mouth.style.height = MOUTH.height;
+    mouth.style.background = 'rgba(0, 0, 0, 0.2)';
+    mouth.style.borderRadius = '50%';
+    mouth.style.transform = 'translateX(-50%)';
+    
+    avatarElement.style.position = 'relative';
+    avatarElement.appendChild(mouth);
+    
+    return mouth;
 }
 
-export function mouthMove(mouthEl, level = 1) {
-    if (!mouthEl) return;
-    const base = parseInt(MOUTH.height, 10) || 30;
-    mouthEl.style.height = (base * (1 + level)) + "px";
-    mouthEl.style.transform = `translate(-50%, -50%) scale(1, ${1 + level})`;
+function mouthMove(mouthEl) {
+    if (mouthEl) {
+        mouthEl.style.scaleY = 1.2;
+    }
 }
 
-export function mouthClose(mouthEl) {
-    if (!mouthEl) return;
-    mouthEl.style.height = MOUTH.height;
-    mouthEl.style.transform = "translate(-50%, -50%) scale(1,1)";
+function mouthClose(mouthEl) {
+    if (mouthEl) {
+        mouthEl.style.scaleY = 1;
+    }
 }
 
-
-/* ------------------------------
-    TTS (мужской голос)
--------------------------------- */
-export function speak(text, mouthEl) {
-    if (!('speechSynthesis' in window)) return;
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = "ru-RU";
-
-    let maleVoice = speechSynthesis.getVoices().find(v =>
-        v.lang === "ru-RU" && (v.name.toLowerCase().includes("male") || v.name.toLowerCase().includes("alex") || v.name.toLowerCase().includes("yuri"))
-    );
-    if (maleVoice) u.voice = maleVoice;
-
-    u.onstart = () => mouthMove(mouthEl, 0.6);
-    u.onend = () => mouthClose(mouthEl);
-    u.onboundary = () => {
-        mouthMove(mouthEl, Math.random() * 0.6 + 0.3);
-        setTimeout(() => mouthClose(mouthEl), 90);
-    };
-
-    speechSynthesis.speak(u);
+function speak(text, mouthEl) {
+    return new Promise((resolve) => {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ru-RU';
+        utterance.rate = 0.9;
+        
+        utterance.onstart = () => {
+            if (mouthEl) mouthMove(mouthEl);
+        };
+        
+        utterance.onend = () => {
+            if (mouthEl) mouthClose(mouthEl);
+            resolve();
+        };
+        
+        speechSynthesis.speak(utterance);
+    });
 }
 
-
-/* ------------------------------
-    STT – распознавание речи
--------------------------------- */
-export function initSTT(callback) {
-    const R = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!R) {
-        // браузер не поддерживает
+function initSTT(callback) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        console.log('Speech Recognition not supported');
         return null;
     }
-
-    const rec = new R();
-    rec.lang = "ru-RU";
-    rec.interimResults = false;
-
-    rec.onresult = e => {
-        const text = e.results[0][0].transcript;
-        callback(text);
+    
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'ru-RU';
+    
+    recognition.onresult = (event) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript;
+        }
+        callback(transcript);
     };
-
-    return rec;
+    
+    return recognition;
 }
 
-
-/* ------------------------------
-    AI – логика DeepSeek
--------------------------------- */
-export async function askAI(question) {
+async function askAI(question) {
     try {
-        const payload = {
-            model: "deepseek-chat",
-            messages: [
-                {
-                    role: "system",
-                    content:
-                        "Ты — русскоговорящий научный ассистент мирового уровня. " +
-                        "Объясняй глубоко, точно, логично, как настоящий учёный. " +
-                        "Избегай воды, пиши ясно и умно."
-                },
-                { role: "user", content: question }
-            ]
-        };
-
-        const res = await fetch(API_URL, {
-            method: "POST",
+        const response = await fetch('https://api.deepseek.com/chat/completions', {
+            method: 'POST',
             headers: {
-                "Authorization": `Bearer ${API_KEY}`,
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${API_KEY}`
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({
+                model: 'deepseek-chat',
+                messages: [
+                    { role: 'user', content: question }
+                ],
+                max_tokens: 200,
+                temperature: 0.7
+            })
         });
-
-        const data = await res.json();
-        if (data && data.choices && data.choices[0] && data.choices[0].message) {
-            return data.choices[0].message.content;
-        }
-        return "Извините, я не могу сейчас ответить.";
-    } catch (err) {
-        console.error('askAI error', err);
-        return "Ошибка при получении ответа от AI.";
+        
+        const data = await response.json();
+        return data.choices[0].message.content;
+    } catch (error) {
+        console.error('AI Error:', error);
+        return 'Извините, произошла ошибка при обработке вашего вопроса.';
     }
 }
 
-// Экспорт по умолчанию (необязательно)
-export default {
+// Export functions
+window.avatar = {
     initMouth,
     mouthMove,
     mouthClose,
